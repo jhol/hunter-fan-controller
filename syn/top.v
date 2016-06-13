@@ -1,5 +1,5 @@
 
-module top(input ref_12mhz, output ant);
+module top(input ref_12mhz, output ant, output test1, output test2);
 
 	wire ref_10mhz, lo_350mhz;
 	wire lock0, lock1;
@@ -33,4 +33,7 @@ module top(input ref_12mhz, output ant);
 	);
 
 	assign ant = lo_350mhz;
+
+	assign test1 = 0;
+	assign test2 = 0;
 endmodule

@@ -1,2 +1,4 @@
 set_io ant       C16
 set_io ref_12mhz J3
+set_io test1     M1
+set_io test2     M2
