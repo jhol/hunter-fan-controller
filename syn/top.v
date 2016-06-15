@@ -32,7 +32,33 @@ module top(input ref_12mhz, output ant, output test1, output test2);
 		.BYPASS(1'b0)
 	);
 
-	assign ant = lo_350mhz;
+	assign ant = lo_350mhz && ook;
+
+	reg [17:0] packet_timer;
+
+	reg ready = 0;
+	reg reset;
+
+	wire start_packet = (packet_timer == 0);
+
+	wire ook;
+
+	packet_generator packet_generator (
+		ook, ref_10mhz, reset, start_packet);
+
+	always @(posedge ref_10mhz) begin
+		if (!ready) begin
+			ready <= 1;
+			reset <= 1;
+		end else
+			reset = 0;
+
+		if (reset) begin
+			packet_timer <= 0;
+		end else begin
+			packet_timer <= packet_timer + 1;
+		end
+	end
 
 	assign test1 = 0;
 	assign test2 = 0;
