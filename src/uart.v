@@ -21,7 +21,7 @@ module async_transmitter(
 // Assert TxD_start for (at least) one clock cycle to start transmission of TxD_data
 // TxD_data is latched so that it doesn't have to stay valid while it is being sent
 
-parameter ClkFrequency = 25000000;	// 25MHz
+parameter ClkFrequency = 12000000;	// 12MHz
 parameter Baud = 115200;
 
 generate
@@ -84,7 +84,7 @@ module async_receiver(
 	output reg RxD_endofpacket = 0  // asserted for one clock cycle when a packet has been detected (i.e. RxD_idle is going high)
 );
 
-parameter ClkFrequency = 25000000; // 25MHz
+parameter ClkFrequency = 12000000;	// 12MHz
 parameter Baud = 115200;
 
 parameter Oversampling = 8;  // needs to be a power of 2
@@ -185,7 +185,7 @@ module BaudTickGen(
 	input clk, enable,
 	output tick  // generate a tick at the specified baud rate * oversampling
 );
-parameter ClkFrequency = 25000000;
+parameter ClkFrequency = 12000000;
 parameter Baud = 115200;
 parameter Oversampling = 1;
 
