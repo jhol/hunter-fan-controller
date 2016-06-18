@@ -1,4 +1,5 @@
-module packet_generator(output out, input ref_clk, input reset, input start);
+module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
+	input start);
 
 	parameter CTR_WIDTH = 8;
 	parameter ID_WIDTH = 4;
@@ -18,10 +19,20 @@ module packet_generator(output out, input ref_clk, input reset, input start);
 	wire [ID_WIDTH : 0] id;
 	assign id = 4'b1010;
 
-	wire [CMD_WIDTH : 0] cmd;
-	assign cmd = 7'b0010111;
+	reg [CMD_WIDTH : 0] payload;
 
 	reg out;
+
+	always @(*) begin
+		case (cmd)
+			0: payload <= 7'b1001111;
+			1: payload <= 7'b1000111;
+			2: payload <= 7'b0100111;
+			3: payload <= 7'b0010111;
+			4: payload <= 7'b0001111;
+			default: payload <= 7'b0000000;
+		endcase
+	end
 
 	always @(posedge ref_clk)
 	begin
@@ -53,13 +64,13 @@ module packet_generator(output out, input ref_clk, input reset, input start);
 					3: data <= id[1];
 					4: data <= id[2];
 					5: data <= id[3];
-					6: data <= cmd[0];
-					7: data <= cmd[1];
-					8: data <= cmd[2];
-					9: data <= cmd[3];
-					10: data <= cmd[4];
-					11: data <= cmd[5];
-					12: data <= cmd[6];
+					6: data <= payload[0];
+					7: data <= payload[1];
+					8: data <= payload[2];
+					9: data <= payload[3];
+					10: data <= payload[4];
+					11: data <= payload[5];
+					12: data <= payload[6];
 					default: data <= 0;
 				endcase
 

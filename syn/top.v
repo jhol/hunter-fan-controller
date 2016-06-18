@@ -38,16 +38,18 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign ant_n = !ant_p;
 
 	reg [17:0] packet_timer;
+	reg [7:0] packet_counter;
 
 	reg ready = 0;
 	reg reset;
+	reg start_packet;
 
-	wire start_packet = (packet_timer == 0);
+	reg [2:0] cmd;
 
 	wire ook;
 
 	packet_generator packet_generator (
-		ook, ref_10mhz, reset, start_packet);
+		ook, ref_10mhz, reset, cmd, start_packet);
 
 	wire rxd_data_ready;
 	wire [7:0] rxd_data;
@@ -64,20 +66,43 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 
 		if (reset) begin
 			packet_timer <= 0;
+			packet_counter <= 0;
+			cmd <= 7;
 		end else begin
-			packet_timer <= packet_timer + 1;
+			packet_timer <= packet_timer - 1;
+
+			if (packet_timer == 0 && packet_counter != 0) begin
+				if (packet_counter == 3)
+					cmd <= 7;
+				packet_counter <= packet_counter - 1;
+				start_packet <= 1;
+				packet_timer <= 158400;
+			end else
+				start_packet <= 0;
+
+			if (rxd_data_ready && packet_counter == 0) begin
+				packet_counter <= 220;
+				packet_timer <= 0;
+				case(rxd_data)
+					"0": cmd <= 0;
+					"1": cmd <= 1;
+					"2": cmd <= 2;
+					"3": cmd <= 3;
+					"l": cmd <= 4;
+				endcase
+			end
 		end
 	end
 
 	assign test1 = 0;
 	assign test2 = 0;
 
-	assign led0 = 0;
-	assign led1 = 0;
-	assign led2 = 0;
-	assign led3 = 0;
-	assign led4 = 0;
+	assign led0 = (cmd == 0);
+	assign led1 = (cmd == 1);
+	assign led2 = (cmd == 2);
+	assign led3 = (cmd == 3);
+	assign led4 = (cmd == 4);
 	assign led5 = 0;
 	assign led6 = 0;
-	assign led7 = 0;
+	assign led7 = packet_counter != 0;
 endmodule
