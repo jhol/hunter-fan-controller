@@ -1,5 +1,6 @@
 
-module top(input ref_12mhz, output ant, output test1, output test2);
+module top(input ref_12mhz, output ant_p, output ant_n,
+	output test1, output test2);
 
 	wire ref_10mhz, lo_350mhz;
 	wire lock0, lock1;
@@ -32,7 +33,8 @@ module top(input ref_12mhz, output ant, output test1, output test2);
 		.BYPASS(1'b0)
 	);
 
-	assign ant = lo_350mhz && ook;
+	assign ant_p = lo_350mhz && ook;
+	assign ant_n = !ant_p;
 
 	reg [17:0] packet_timer;
 
