@@ -1,6 +1,7 @@
 
-module top(input ref_12mhz, output ant_p, output ant_n,
-	output test1, output test2);
+module top(input ref_12mhz, output ant_p, output ant_n, output test1,
+	output test2, output led0, output led1, output led2, output led3,
+	output led4, output led5, output led6, output led7);
 
 	wire ref_10mhz, lo_350mhz;
 	wire lock0, lock1;
@@ -64,4 +65,13 @@ module top(input ref_12mhz, output ant_p, output ant_n,
 
 	assign test1 = 0;
 	assign test2 = 0;
+
+	assign led0 = 0;
+	assign led1 = 0;
+	assign led2 = 0;
+	assign led3 = 0;
+	assign led4 = 0;
+	assign led5 = 0;
+	assign led6 = 0;
+	assign led7 = 0;
 endmodule

@@ -1,5 +1,15 @@
 set_io ant_p     B16
 set_io ant_n     C16
 set_io ref_12mhz J3
+
 set_io test1     M1
 set_io test2     M2
+
+set_io led0      B5
+set_io led1      B4
+set_io led2      A2
+set_io led3      A1
+set_io led4      C5
+set_io led5      C4
+set_io led6      B3
+set_io led7      C3
