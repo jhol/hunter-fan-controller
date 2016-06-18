@@ -1,5 +1,5 @@
 
-module top(input ref_12mhz, output ant_p, output ant_n, output test1,
+module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	output test2, output led0, output led1, output led2, output led3,
 	output led4, output led5, output led6, output led7);
 
@@ -48,6 +48,12 @@ module top(input ref_12mhz, output ant_p, output ant_n, output test1,
 
 	packet_generator packet_generator (
 		ook, ref_10mhz, reset, start_packet);
+
+	wire rxd_data_ready;
+	wire [7:0] rxd_data;
+	async_receiver rx (
+		.clk(ref_12mhz), .RxD(rxd), .RxD_data_ready(rxd_data_ready),
+		.RxD_data(rxd_data));
 
 	always @(posedge ref_10mhz) begin
 		if (!ready) begin
