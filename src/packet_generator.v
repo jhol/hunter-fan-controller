@@ -37,7 +37,7 @@ module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
 	always @(posedge ref_clk)
 	begin
 		if (protocol_clk_phase == 0) begin
-			protocol_clk_phase <= 1835;
+			protocol_clk_phase <= 2202;
 		end else begin
 			protocol_clk_phase <= protocol_clk_phase - 1;
 		end

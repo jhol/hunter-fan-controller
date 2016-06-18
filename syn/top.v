@@ -49,7 +49,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	wire ook;
 
 	packet_generator packet_generator (
-		ook, ref_10mhz, reset, cmd, start_packet);
+		ook, ref_12mhz, reset, cmd, start_packet);
 
 	wire rxd_data_ready;
 	wire [7:0] rxd_data;
@@ -57,7 +57,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 		.clk(ref_12mhz), .RxD(rxd), .RxD_data_ready(rxd_data_ready),
 		.RxD_data(rxd_data));
 
-	always @(posedge ref_10mhz) begin
+	always @(posedge ref_12mhz) begin
 		if (!ready) begin
 			ready <= 1;
 			reset <= 1;
