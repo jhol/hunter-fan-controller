@@ -9,7 +9,7 @@ module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
 	wire clk, reset;
 
 	reg packet_sending;
-	reg data, pwm;
+	reg data;
 
 	reg [12:0] protocol_clk_phase;
 
