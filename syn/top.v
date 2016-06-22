@@ -1,7 +1,6 @@
 
 module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
-	output test2, output led0, output led1, output led2, output led3,
-	output led4, output led5, output led6, output led7, input [3:0] b);
+	output test2, output [7:0] leds, input [3:0] b);
 
 	parameter PacketBurstCount = 220;
 
@@ -126,12 +125,12 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign test1 = 0;
 	assign test2 = 0;
 
-	assign led0 = (cmd == 0);
-	assign led1 = (cmd == 1);
-	assign led2 = (cmd == 2);
-	assign led3 = (cmd == 3);
-	assign led4 = (cmd == 4);
-	assign led5 = 0;
-	assign led6 = 0;
-	assign led7 = packet_counter != 0;
+	assign leds[0] = (cmd == 0);
+	assign leds[1] = (cmd == 1);
+	assign leds[2] = (cmd == 2);
+	assign leds[3] = (cmd == 3);
+	assign leds[4] = (cmd == 4);
+	assign leds[5] = 0;
+	assign leds[6] = 0;
+	assign leds[7] = packet_counter != 0;
 endmodule

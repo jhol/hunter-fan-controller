@@ -7,14 +7,14 @@ set_io rxd       B10
 set_io test1     M1
 set_io test2     M2
 
-set_io led0      B5
-set_io led1      B4
-set_io led2      A2
-set_io led3      A1
-set_io led4      C5
-set_io led5      C4
-set_io led6      B3
-set_io led7      C3
+set_io leds[0]   B5
+set_io leds[1]   B4
+set_io leds[2]   A2
+set_io leds[3]   A1
+set_io leds[4]   C5
+set_io leds[5]   C4
+set_io leds[6]   B3
+set_io leds[7]   C3
 
 set_io b[0]      N16
 set_io b[1]      M16
