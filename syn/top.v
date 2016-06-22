@@ -1,7 +1,9 @@
 
 module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	output test2, output led0, output led1, output led2, output led3,
-	output led4, output led5, output led6, output led7);
+	output led4, output led5, output led6, output led7, input [3:0] b);
+
+	parameter PacketBurstCount = 220;
 
 	wire ref_10mhz, lo_350mhz;
 	wire lock0, lock1;
@@ -34,6 +36,17 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 		.BYPASS(1'b0)
 	);
 
+	wire [3:0] b_din;
+
+	SB_IO #( .PIN_TYPE(6'b0000_01), .PULLUP(1'b1)) b1_config (
+		.PACKAGE_PIN(b[0]), .D_IN_0(b_din[0]));
+	SB_IO #( .PIN_TYPE(6'b0000_01), .PULLUP(1'b1)) b2_config (
+		.PACKAGE_PIN(b[1]), .D_IN_0(b_din[1]));
+	SB_IO #( .PIN_TYPE(6'b0000_01), .PULLUP(1'b1)) b3_config (
+		.PACKAGE_PIN(b[2]), .D_IN_0(b_din[2]));
+	SB_IO #( .PIN_TYPE(6'b0000_01), .PULLUP(1'b1)) b4_config (
+		.PACKAGE_PIN(b[3]), .D_IN_0(b_din[3]));
+
 	assign ant_p = lo_350mhz && ook;
 	assign ant_n = !ant_p;
 
@@ -42,6 +55,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 
 	reg ready = 0;
 	reg reset;
+	reg start_burst;
 	reg start_packet;
 
 	reg [2:0] cmd;
@@ -80,16 +94,31 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 			end else
 				start_packet <= 0;
 
-			if (rxd_data_ready && packet_counter == 0) begin
-				packet_counter <= 220;
-				packet_timer <= 0;
-				case(rxd_data)
-					"0": cmd <= 0;
-					"1": cmd <= 1;
-					"2": cmd <= 2;
-					"3": cmd <= 3;
-					"l": cmd <= 4;
-				endcase
+			if (packet_counter == 0) begin
+				start_burst = 1;
+				if (rxd_data_ready) begin
+					case(rxd_data)
+						"0": cmd <= 0;
+						"1": cmd <= 1;
+						"2": cmd <= 2;
+						"3": cmd <= 3;
+						"l": cmd <= 4;
+					endcase
+				end else if (!b_din[0]) begin
+					cmd <= 0;
+				end else if (!b_din[1]) begin
+					cmd <= 1;
+				end else if (!b_din[2]) begin
+					cmd <= 2;
+				end else if (!b_din[3]) begin
+					cmd <= 3;
+				end else
+					start_burst = 0;
+
+				if (start_burst) begin
+					packet_counter <= PacketBurstCount;
+					packet_timer <= 0;
+				end
 			end
 		end
 	end

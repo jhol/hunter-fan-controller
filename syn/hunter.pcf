@@ -15,3 +15,8 @@ set_io led4      C5
 set_io led5      C4
 set_io led6      B3
 set_io led7      C3
+
+set_io b[0]      N16
+set_io b[1]      M16
+set_io b[2]      L16
+set_io b[3]      M15
