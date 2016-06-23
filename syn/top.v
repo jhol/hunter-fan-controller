@@ -2,8 +2,6 @@
 module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	output test2, output [7:0] leds, input [3:0] b);
 
-	parameter PacketBurstCount = 220;
-
 	wire ref_10mhz, lo_350mhz;
 	wire lock0, lock1;
 
@@ -50,7 +48,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign ant_n = !ant_p;
 
 	reg [17:0] packet_timer;
-	reg [7:0] packet_counter;
+	reg [5:0] packet_counter;
 
 	reg ready = 0;
 	reg reset;
@@ -115,7 +113,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 					start_burst = 0;
 
 				if (start_burst) begin
-					packet_counter <= PacketBurstCount;
+					packet_counter <= ~0;
 					packet_timer <= 0;
 				end
 			end
