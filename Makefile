@@ -1,6 +1,6 @@
 
 outdir=_out/
-src=src/packet_generator.v src/uart.v
+src=src/controller.v src/packet_generator.v src/uart.v
 
 synthesize: $(outdir)hunter.bin
 

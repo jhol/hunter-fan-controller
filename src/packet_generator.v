@@ -1,5 +1,5 @@
-module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
-	input start);
+module packet_generator(output out, output sending, input ref_clk, input reset,
+	input [2:0] cmd, input start);
 
 	parameter ID_WIDTH = 4;
 	parameter CMD_WIDTH = 7;
@@ -7,7 +7,7 @@ module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
 
 	wire clk, reset;
 
-	reg packet_sending;
+	reg sending;
 	reg data;
 
 	reg [10:0] protocol_clk_phase;
@@ -57,16 +57,17 @@ module packet_generator(output out, input ref_clk, input reset, input [2:0] cmd,
 		end
 
 		if (reset) begin
-			packet_sending <= 0;
+			sending <= 0;
 		end else if (start) begin
 			pwm_phase <= 0;
 			packet_offset <= 0;
-			packet_sending <= 1;
+			sending <= 1;
 			protocol_clk_phase <= 0;
 		end else if (protocol_clk_phase == 0) begin
-			if (packet_offset == 13)
+			if (packet_offset == 13) begin
 				out <= 0;
-			else begin
+				sending <= 0;
+			end else begin
 				if (pwm_phase == 2'b10) begin
 					pwm_phase <= 2'b00;
 					packet_offset <= packet_offset + 1;

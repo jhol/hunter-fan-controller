@@ -47,75 +47,26 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign ant_p = lo_350mhz && ook;
 	assign ant_n = !ant_p;
 
-	reg [16:0] packet_timer;
-	reg [5:0] packet_counter;
-
 	reg ready = 0;
 	reg reset;
-	reg start_burst;
-	reg start_packet;
 
-	reg [2:0] cmd;
-
+	wire start_burst;
+	wire start_packet;
+	wire [2:0] cmd;
 	wire ook;
+	wire sending;
 
 	packet_generator packet_generator (
-		ook, ref_12mhz, reset, cmd, start_packet);
-
-	wire rxd_data_ready;
-	wire [7:0] rxd_data;
-	async_receiver rx (
-		.clk(ref_12mhz), .RxD(rxd), .RxD_data_ready(rxd_data_ready),
-		.RxD_data(rxd_data));
-
+		ook, sending, ref_12mhz, reset, cmd, start_packet);
+	controller controller (.start_packet(start_packet), .cmd(cmd),
+		.ref_clk(ref_12mhz), .reset(reset), .rxd(rxd), .b_din(b_din));
+		
 	always @(posedge ref_12mhz) begin
 		if (!ready) begin
 			ready <= 1;
 			reset <= 1;
 		end else
 			reset = 0;
-
-		if (reset) begin
-			packet_timer <= 0;
-			packet_counter <= 0;
-			cmd <= 7;
-		end else begin
-			packet_timer <= packet_timer - 1;
-
-			if (packet_timer == 0 && packet_counter != 0) begin
-				packet_counter <= packet_counter - 1;
-				start_packet <= 1;
-				packet_timer <= ~0;
-			end else
-				start_packet <= 0;
-
-			if (packet_counter == 0) begin
-				start_burst = 1;
-				if (rxd_data_ready) begin
-					case(rxd_data)
-						"0": cmd <= 0;
-						"1": cmd <= 1;
-						"2": cmd <= 2;
-						"3": cmd <= 3;
-						"l": cmd <= 4;
-					endcase
-				end else if (!b_din[0]) begin
-					cmd <= 0;
-				end else if (!b_din[1]) begin
-					cmd <= 1;
-				end else if (!b_din[2]) begin
-					cmd <= 2;
-				end else if (!b_din[3]) begin
-					cmd <= 3;
-				end else
-					start_burst = 0;
-
-				if (start_burst) begin
-					packet_counter <= ~0;
-					packet_timer <= 0;
-				end
-			end
-		end
 	end
 
 	assign test1 = 0;
@@ -128,5 +79,5 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign leds[4] = (cmd == 4);
 	assign leds[5] = 0;
 	assign leds[6] = 0;
-	assign leds[7] = packet_counter != 0;
+	assign leds[7] = sending;
 endmodule
