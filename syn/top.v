@@ -47,7 +47,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 	assign ant_p = lo_350mhz && ook;
 	assign ant_n = !ant_p;
 
-	reg [17:0] packet_timer;
+	reg [16:0] packet_timer;
 	reg [5:0] packet_counter;
 
 	reg ready = 0;
@@ -87,7 +87,7 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 					cmd <= 7;
 				packet_counter <= packet_counter - 1;
 				start_packet <= 1;
-				packet_timer <= 158400;
+				packet_timer <= ~0;
 			end else
 				start_packet <= 0;
 
