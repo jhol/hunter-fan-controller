@@ -83,8 +83,6 @@ module top(input ref_12mhz, input rxd, output ant_p, output ant_n, output test1,
 			packet_timer <= packet_timer - 1;
 
 			if (packet_timer == 0 && packet_counter != 0) begin
-				if (packet_counter == 3)
-					cmd <= 7;
 				packet_counter <= packet_counter - 1;
 				start_packet <= 1;
 				packet_timer <= ~0;
